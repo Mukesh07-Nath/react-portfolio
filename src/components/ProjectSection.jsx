@@ -30,6 +30,16 @@ const projects = [
     tags: ["React", "Tailwind CSS", "JavaScript"],
     demoURL: "https://spotify-frontend1.vercel.app/",
     githubURL: "https://github.com/Mukesh07-Nath/spotify-full-stack",
+  },
+  {
+    id: 4,
+    title: "NikeX – Modern E-commerce UI",
+    description:
+      "A modern Nike-inspired e-commerce web application built using React. This project replicates real-world shopping features such as product browsing, filtering, cart management, and user authentication.",
+    image: "/projects/project4.png",
+    tags: ["React", "Tailwind CSS", "JavaScript"],
+    demoURL: "https://nike-frontend-eight-xi.vercel.app/",
+    githubURL: "https://github.com/Mukesh07-Nath/Nike-Website",
   }
 ];
 
