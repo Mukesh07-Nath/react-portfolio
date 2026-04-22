@@ -16,15 +16,48 @@ export const ContactSection = () => {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true)
-    setTimeout(() => {
-      setOpen(true);
-      setIsSubmitting(false)
-          e.target.reset();
-    }, 500);
+    setIsSubmitting(true);
 
+    const formData = new FormData(e.target);
+
+    // ✅ Your Web3Forms Access Key
+    formData.append("access_key", "60e59e04-135d-4e01-bef4-b455d41e074c");
+
+    // ✅ Email Subject
+    formData.append("subject", "New Portfolio Contact Message");
+
+    // ✅ Send to your email
+    formData.append("from_name", "Portfolio Contact Form");
+
+    const object = Object.fromEntries(formData);
+    const json = JSON.stringify(object);
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: json,
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setOpen(true);
+        e.target.reset();
+      } else {
+        alert("Something went wrong!");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Failed to send message");
+    }
+
+    setIsSubmitting(false);
   };
 
   return (
@@ -38,7 +71,7 @@ export const ContactSection = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
 
-            {/* LEFT SIDE (same) */}
+            {/* LEFT SIDE */}
             <div className="space-y-8">
               <h3 className="text-2xl font-semibold mb-6">
                 Contact Information
@@ -54,7 +87,7 @@ export const ContactSection = () => {
                   <div>
                     <h4 className="font-medium">Email</h4>
                     <a
-                      href="mailto:hello@gmail.com"
+                      href="mailto:mukeshpatnaik46@gmail.com"
                       className="text-muted-foreground hover:text-primary transition-colors"
                     >
                       mukeshpatnaik46@gmail.com
@@ -101,12 +134,15 @@ export const ContactSection = () => {
                   <a href="#" className="p-2 rounded-full border hover:bg-primary/10">
                     <Linkedin className="w-5 h-5" />
                   </a>
+
                   <a href="#" className="p-2 rounded-full border hover:bg-primary/10">
                     <Twitter className="w-5 h-5" />
                   </a>
+
                   <a href="#" className="p-2 rounded-full border hover:bg-primary/10">
                     <Instagram className="w-5 h-5" />
                   </a>
+
                   <a href="#" className="p-2 rounded-full border hover:bg-primary/10">
                     <Facebook className="w-5 h-5" />
                   </a>
@@ -116,13 +152,15 @@ export const ContactSection = () => {
 
             {/* RIGHT SIDE FORM */}
             <div className="bg-card p-8 rounded-lg shadow-xs">
-              <h3 className="text-2xl font-semibold mb-6">Send a Message</h3>
+              <h3 className="text-2xl font-semibold mb-6">
+                Send a Message
+              </h3>
 
-              {/* ✅ FIXED: onSubmit here */}
               <form onSubmit={handleSubmit} className="space-y-6">
 
                 <input
                   type="text"
+                  name="name"
                   required
                   placeholder="Your Name"
                   className="w-full px-4 py-3 rounded-md border border-input bg-background focus:ring-2 focus:ring-primary"
@@ -130,14 +168,17 @@ export const ContactSection = () => {
 
                 <input
                   type="email"
+                  name="email"
                   required
                   placeholder="Your Email"
                   className="w-full px-4 py-3 rounded-md border border-input bg-background focus:ring-2 focus:ring-primary"
                 />
 
                 <textarea
+                  name="message"
                   required
                   placeholder="Hi, I'd love to hear from you!"
+                  rows={5}
                   className="w-full px-4 py-3 rounded-md border border-input bg-background focus:ring-2 focus:ring-primary resize-none"
                 />
 
@@ -148,7 +189,9 @@ export const ContactSection = () => {
                     "cosmic-button w-full flex items-center justify-center gap-2"
                   )}
                 >
-                  {isSubmitting ? "Sending..." : "Send Message"} <Send size={16} />
+                  {isSubmitting ? "Sending..." : "Send Message"}
+
+                  <Send size={16} />
                 </button>
 
               </form>
@@ -157,7 +200,7 @@ export const ContactSection = () => {
         </div>
       </section>
 
-      {/* ✅ TOAST UI */}
+      {/* TOAST */}
       <Toast.Root
         open={open}
         onOpenChange={setOpen}
@@ -166,6 +209,7 @@ export const ContactSection = () => {
         <Toast.Title className="font-semibold">
           Message Sent ✅
         </Toast.Title>
+
         <Toast.Description>
           Thank you! I’ll get back to you soon.
         </Toast.Description>
